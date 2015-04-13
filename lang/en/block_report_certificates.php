@@ -22,7 +22,7 @@
  * @subpackage block_report_certificates
  */
 
-$string['report_certificates_pluginname'] = 'Download Certificates';
+$string['pluginname'] = 'Download Certificates';
 $string['report_certificates'] = 'Download Certificates';
 $string['report_certificates_tblheader_coursename'] = 'Course Name';
 $string['report_certificates_tblheader_grade'] = 'Grade';

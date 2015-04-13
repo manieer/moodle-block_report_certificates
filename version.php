@@ -32,3 +32,5 @@ $plugin->version  = 2015041302;       // The current module version (Date: YYYYM
 $plugin->requires = 2011120501;       // Requires this Moodle version
 $plugin->cron = 0;                    // Period for cron to check this module (secs)
 $plugin->component = 'block_report_certificates'; // To check on upgrade, that module sits in correct place
+$plugin->maturity = MATURITY_STABLE;
+$plugin->release = 'v1-0415';
