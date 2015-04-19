@@ -22,7 +22,7 @@
  * @subpackage block_report_certificates
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 */
- 
+
 .block_report_certificates h1 {margin: 4px;font-size: 1.1em;}
 .block_report_certificatesg table.grades {text-align: left;width: 100%; cell-spacing: 1;}
 .block_report_certificates th {text-align: left}
