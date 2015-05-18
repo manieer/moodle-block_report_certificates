@@ -42,28 +42,33 @@ require_once($CFG->dirroot.'/mod/certificate/locallib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_report_certificates extends block_base {
-	
-	
-   /**
-    * 
-    * Report previously issued certificates.
-    * 
-    * Displays all previously issued certificatesfor logged in user.
-    */ 
+
+    /**
+     * 
+     * Report previously issued certificates.
+     * 
+     * Displays all previously issued certificatesfor logged in user.
+     */
     public function init() {
         $this->title   = get_string('report_certificates', 'block_report_certificates');
         $this->version = 2015051800;
     }
-   
+
+    /**
+     * 
+     * Retrieving relevant required data.
+     * 
+     * Retrieving data and populating them for displaying on the block.
+     */
     public function get_content() {
-		global $USER, $DB, $CFG;
+        global $USER, $DB, $CFG;
 
         if ($this->content !== null) {
             return $this->content;
         }
 
         // User ID.
-		$userid = optional_param('userid', $USER->id, PARAM_INT);
+        $userid = optional_param('userid', $USER->id, PARAM_INT);
 
         $this->content = new stdClass;
         $this->content->items = array();
@@ -115,13 +120,13 @@ class block_report_certificates extends block_base {
             return $this->content;
         } else {
             foreach ($certificates as $certdata) {
-				
-				$certdata->printdate = 1; // Modify printdate so that date is always printed.
+
+                $certdata->printdate = 1; // Modify printdate so that date is always printed.
                 $certrecord = new stdClass();
                 $certrecord->timecreated = $certdata->citimecreated;
-				
-				// Date format.
-				$dateformat = get_string('strfdateshortmonth', 'langconfig');
+
+                // Date format.
+                $dateformat = get_string('strfdateshortmonth', 'langconfig');
 
                 // Required variables for output.
                 $userid = $certrecord->userid = $certdata->userid;
@@ -130,11 +135,11 @@ class block_report_certificates extends block_base {
                 $courseid = $certrecord->id = $certdata->id;
                 $coursename = $certrecord->fullname = $certdata->fullname;
                 $filename = $certrecord->filename = $certdata->filename;
-                $code = $certrecord->code = $certdata->code;				
-				
-				// Retrieving grade and date for each certificate.
-				$grade = certificate_get_grade($certdata, $certrecord, $userid, $valueonly = true);
-				$date = $certrecord->timecreated = $certdata->citimecreated;
+                $code = $certrecord->code = $certdata->code;
+
+                // Retrieving grade and date for each certificate.
+                $grade = certificate_get_grade($certdata, $certrecord, $userid, $valueonly = true);
+                $date = $certrecord->timecreated = $certdata->citimecreated;
 
                 // Direct course link.
                 $link = html_writer::link(new moodle_url('/course/view.php', array('id' => $courseid)),

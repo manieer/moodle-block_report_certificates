@@ -28,8 +28,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// defined('MOODLE_INTERNAL') || die();
-
 require_once('../../config.php');
 require_once($CFG->dirroot.'/mod/certificate/locallib.php');
 
@@ -93,13 +91,13 @@ if (!$certificates) {
 } else {
 
     foreach ($certificates as $certdata) {
-				
-		        $certdata->printdate = 1; // Modify printdate so that date is always printed.
+
+                $certdata->printdate = 1; // Modify printdate so that date is always printed.
                 $certrecord = new stdClass();
                 $certrecord->timecreated = $certdata->citimecreated;
-				
-				// Date format.
-				$dateformat = get_string('strfdateshortmonth', 'langconfig');
+
+                // Date format.
+                $dateformat = get_string('strfdateshortmonth', 'langconfig');
 
                 // Required variables for output.
                 $userid = $certrecord->userid = $certdata->userid;
@@ -108,11 +106,11 @@ if (!$certificates) {
                 $courseid = $certrecord->id = $certdata->id;
                 $coursename = $certrecord->fullname = $certdata->fullname;
                 $filename = $certrecord->filename = $certdata->filename;
-                $code = $certrecord->code = $certdata->code;	
-				
-				// Retrieving grade and date for each certificate.
-				$grade = certificate_get_grade($certdata, $certrecord, $userid, $valueonly = true);
-				$date = $certrecord->timecreated = $certdata->citimecreated;
+                $code = $certrecord->code = $certdata->code;
+
+                // Retrieving grade and date for each certificate.
+                $grade = certificate_get_grade($certdata, $certrecord, $userid, $valueonly = true);
+                $date = $certrecord->timecreated = $certdata->citimecreated;
 
         // Direct course link.
         $link = html_writer::link(new moodle_url('/course/view.php', array('id' => $courseid)),
