@@ -28,8 +28,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// defined('MOODLE_INTERNAL') || die();
+
 require_once('../../config.php');
-require_once($CFG->dirroot.'/blocks/report_certificates/locallib.php');
+require_once($CFG->dirroot.'/mod/certificate/locallib.php');
 
 require_login();
 
@@ -40,7 +42,6 @@ $PAGE->set_url($url);
 
         // Check capabilities.
         $context = context_system::instance();
-        require_capability('mod/certificate:view', $context);
         $PAGE->set_context($context);
 
         $PAGE->navbar->add($strcertificates);
@@ -92,21 +93,26 @@ if (!$certificates) {
 } else {
 
     foreach ($certificates as $certdata) {
-        // Required variables for output.
-        $certdata->printdate = 1; // Modify printdate so that date is always printed.
-        $certrecord = new stdClass();
-        $certrecord->timecreated = $certdata->citimecreated;
-        $userid = $certrecord->userid = $certdata->userid;
-        $certificateid = $certrecord->certificateid = $certdata->certificateid;
-        $contextid = $certrecord->contextid = $certdata->contextid;
-        $courseid = $certrecord->id = $certdata->id;
-        $coursename = $certrecord->fullname = $certdata->fullname;
-        $filename = $certrecord->filename = $certdata->filename;
-        $code = $certrecord->code = $certdata->code;
-        $grade = get_certificate_grade($certdata, $courseid, $userid);
-        $date = get_certificate_date($certdata, $certrecord, $courseid, $userid);
-        $date = get_certificate_date($certdata, $certrecord, $courseid, $userid);
-        $grade = get_certificate_grade($certdata, $courseid, $userid);
+				
+		        $certdata->printdate = 1; // Modify printdate so that date is always printed.
+                $certrecord = new stdClass();
+                $certrecord->timecreated = $certdata->citimecreated;
+				
+				// Date format.
+				$dateformat = get_string('strfdateshortmonth', 'langconfig');
+
+                // Required variables for output.
+                $userid = $certrecord->userid = $certdata->userid;
+                $certificateid = $certrecord->certificateid = $certdata->certificateid;
+                $contextid = $certrecord->contextid = $certdata->contextid;
+                $courseid = $certrecord->id = $certdata->id;
+                $coursename = $certrecord->fullname = $certdata->fullname;
+                $filename = $certrecord->filename = $certdata->filename;
+                $code = $certrecord->code = $certdata->code;	
+				
+				// Retrieving grade and date for each certificate.
+				$grade = certificate_get_grade($certdata, $certrecord, $userid, $valueonly = true);
+				$date = $certrecord->timecreated = $certdata->citimecreated;
 
         // Direct course link.
         $link = html_writer::link(new moodle_url('/course/view.php', array('id' => $courseid)),
@@ -121,7 +127,7 @@ if (!$certificates) {
                     .'width="100px" height="29px">'
                     .'</a>';
 
-        $table->data[] = array ($link,  $grade, $code, $date, $outputlink);
+        $table->data[] = array ($link,  $grade, $code, userdate($date, $dateformat), $outputlink);
 
     }
     echo $OUTPUT->heading(get_string('report_certificates_heading', 'block_report_certificates'));

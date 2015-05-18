@@ -24,7 +24,7 @@
 */
 
 .block_report_certificates h1 {margin: 4px;font-size: 1.1em;}
-.block_report_certificatesg table.grades {text-align: left;width: 100%; cell-spacing: 1;}
+.block_report_certificatesg table.grades {text-align: left;width: 100%; cell-spacing: 1px;}
 .block_report_certificates th {text-align: left}
 
 .block_report_certificates table {width: 100%; border: 1px; border-spacing: 1px;}
