@@ -102,14 +102,14 @@ class block_report_certificates extends block_base {
                              ON ctx.instanceid = cm.id
                      INNER JOIN {files} f
                              ON f.contextid = ctx.id
-                          WHERE cm.module = 23 AND
+                          WHERE cm.module = 4 AND
                                 ctx.contextlevel = 70 AND
                                 f.mimetype = 'application/pdf' AND
                                 ci.userid = f.userid AND
                                 ci.userid = :userid
                        GROUP BY ci.code
                        ORDER BY ci.timecreated ASC";
-            // CERTIFICATE MODULE (cm.module = 23), CONTEXT_MODULE (ctx.contextlevel = 70).
+            // CERTIFICATE MODULE (cm.module = 4), CONTEXT_MODULE (ctx.contextlevel = 70).
             // PDF FILES ONLY (f.mimetype = 'application/pdf').
 
         $limit = " LIMIT 5"; // Limiting the output results to just five records.
@@ -126,7 +126,7 @@ class block_report_certificates extends block_base {
                 $certrecord->timecreated = $certdata->citimecreated;
 
                 // Date format.
-                $dateformat = get_string('strftimedate', 'langconfig');
+                $dateformat = get_string('strfdateshortmonth', 'langconfig');
 
                 // Required variables for output.
                 $userid = $certrecord->userid = $certdata->userid;
