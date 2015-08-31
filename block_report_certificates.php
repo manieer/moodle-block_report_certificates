@@ -61,7 +61,7 @@ class block_report_certificates extends block_base {
      * Retrieving data and populating them for displaying on the block.
      */
     public function get_content() {
-        global $USER, $DB, $CFG,$COURSE;
+        global $USER, $DB, $CFG;
 
         if ($this->content !== null) {
             return $this->content;
@@ -105,7 +105,6 @@ class block_report_certificates extends block_base {
                      INNER JOIN {files} f
                              ON f.contextid = ctx.id
                           WHERE cm.module = :moduleid AND
-								c.id = $COURSE->id AND
                                 ctx.contextlevel = 70 AND
                                 f.mimetype = 'application/pdf' AND
                                 ci.userid = f.userid AND
@@ -119,12 +118,7 @@ class block_report_certificates extends block_base {
         $certificates = $DB->get_records_sql($sql.$limit, array('userid' => $USER->id,'moduleid'=>$moduleid));
 
         if (empty($certificates)) {
-            $this->content->text = get_string('report_certificates_noreports', 'block_report_certificates');
-			
-			$this->content->footer = html_writer::link(new moodle_url('/blocks/report_certificates/report.php',
-                                 array('userid' => $USER->id)),
-                                 get_string('report_certificates_footermessage', 'block_report_certificates'));
-								 
+            $this->content->text = get_string('report_certificates_noreports', 'block_report_certificates');								 
             return $this->content;
         } else {
             foreach ($certificates as $certdata) {
