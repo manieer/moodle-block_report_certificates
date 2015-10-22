@@ -55,6 +55,8 @@ $PAGE->set_url($url);
                              get_string('report_certificates_tblheader_issuedate', 'block_report_certificates'),
                              get_string('report_certificates_tblheader_download', 'block_report_certificates'));
         $table->align = array ("left", "center", "center", "center", "center");
+		
+		$moduleid = $DB->get_field('modules', 'id', array('name'=>'certificate'), MUST_EXIST );
 
         $sql = "SELECT DISTINCT ci.id AS certificateid, ci.userid, ci.code AS code,
                                 ci.timecreated AS citimecreated,
@@ -74,7 +76,7 @@ $PAGE->set_url($url);
                              ON ctx.instanceid = cm.id
                      INNER JOIN {files} f
                              ON f.contextid = ctx.id
-                          WHERE cm.module = 4 AND
+                          WHERE cm.module = :moduleid AND
                                 ctx.contextlevel = 70 AND
                                 f.mimetype = 'application/pdf' AND
                                 ci.userid = f.userid AND
@@ -83,7 +85,7 @@ $PAGE->set_url($url);
                        ORDER BY ci.timecreated ASC";
         // CERTIFICATE MODULE (cm.module = 4), CONTEXT_MODULE (ctx.contextlevel = 70).
         // PDF FILES ONLY (f.mimetype = 'application/pdf').
-        $certificates = $DB->get_records_sql($sql, array('userid' => $USER->id));
+        $certificates = $DB->get_records_sql($sql, array('userid' => $USER->id，'moduleid'=>$moduleid));
 
 if (!$certificates) {
     print_error(get_string('notissuedyet', 'certificate'));
@@ -97,7 +99,7 @@ if (!$certificates) {
                 $certrecord->timecreated = $certdata->citimecreated;
 
                 // Date format.
-                $dateformat = get_string('strfdateshortmonth', 'langconfig');
+                $dateformat = get_string('strftimedate');
 
                 // Required variables for output.
                 $userid = $certrecord->userid = $certdata->userid;
