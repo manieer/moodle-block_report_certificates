@@ -16,11 +16,11 @@
 
  /**
   * Version details
-  * 
+  *
   * Report certificates block
   * --------------------------
-  * Displays all issued certificates for users with unique codes. 
-  * The certificates will also be issued for courses that have been archived since issuing of the certificates 
+  * Displays all issued certificates for users with unique codes.
+  * The certificates will also be issued for courses that have been archived since issuing of the certificates
   *
   * @copyright  2015 onwards Manieer Chhettri | Marie Curie, UK | <manieer@gmail.com>
   * @author     Manieer Chhettri | Marie Curie, UK | <manieer@gmail.com> | 2015
@@ -30,13 +30,12 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2015051800;       // The current module version (Date: YYYYMMDDXX).
-//$plugin->requires = 2014051203;       // Requires this Moodle version 2.7.
-$plugin->requires = 2013111803;          // Requires this Moodle version 2.6.
+$plugin->version  = 2016042900;       // The current module version (Date: YYYYMMDDXX).
+$plugin->requires = 2014111000;       // Requires this Moodle version 2.8.
 $plugin->cron = 0;                    // Period for cron to check this module (secs).
 $plugin->component = 'block_report_certificates'; // To check on upgrade, that module sits in correct place.
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = 'v3-0515';
+$plugin->release = 'v6-0501';
 
 $plugin->dependencies = array(
     'mod_certificate' => ANY_VERSION

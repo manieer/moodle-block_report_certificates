@@ -16,11 +16,11 @@
 
 /**
  * Version details
- * 
+ *
  * Report certificates block
  * --------------------------
- * Displays all issued certificates for users with unique codes. 
- * The certificates will also be issued for courses that have been archived since issuing of the certificates 
+ * Displays all issued certificates for users with unique codes.
+ * The certificates will also be issued for courses that have been archived since issuing of the certificates
  *
  * @copyright  2015 onwards Manieer Chhettri | Marie Curie, UK | <manieer@gmail.com>
  * @author     Manieer Chhettri | Marie Curie, UK | <manieer@gmail.com> | 2015
@@ -55,8 +55,6 @@ $PAGE->set_url($url);
                              get_string('report_certificates_tblheader_issuedate', 'block_report_certificates'),
                              get_string('report_certificates_tblheader_download', 'block_report_certificates'));
         $table->align = array ("left", "center", "center", "center", "center");
-		
-		$moduleid = $DB->get_field('modules', 'id', array('name'=>'certificate'), MUST_EXIST );
 
         $sql = "SELECT DISTINCT ci.id AS certificateid, ci.userid, ci.code AS code,
                                 ci.timecreated AS citimecreated,
@@ -76,30 +74,29 @@ $PAGE->set_url($url);
                              ON ctx.instanceid = cm.id
                      INNER JOIN {files} f
                              ON f.contextid = ctx.id
-                          WHERE cm.module = :moduleid AND
-                                ctx.contextlevel = 70 AND
+                          WHERE ctx.contextlevel = 70 AND
                                 f.mimetype = 'application/pdf' AND
                                 ci.userid = f.userid AND
                                 ci.userid = :userid
                        GROUP BY ci.code
                        ORDER BY ci.timecreated ASC";
-        // CERTIFICATE MODULE (cm.module = 4), CONTEXT_MODULE (ctx.contextlevel = 70).
+        // CERTIFICATE MODULE (cm.module = 23), CONTEXT_MODULE (ctx.contextlevel = 70).
         // PDF FILES ONLY (f.mimetype = 'application/pdf').
-        $certificates = $DB->get_records_sql($sql, array('userid' => $USER->id，'moduleid'=>$moduleid));
+        $certificates = $DB->get_records_sql($sql, array('userid' => $USER->id));
 
-if (!$certificates) {
-    print_error(get_string('notissuedyet', 'certificate'));
+        if (!$certificates) {
+            print_error(get_string('notissuedyet', 'certificate'));
 
-} else {
+        } else {
 
-    foreach ($certificates as $certdata) {
+            foreach ($certificates as $certdata) {
 
                 $certdata->printdate = 1; // Modify printdate so that date is always printed.
                 $certrecord = new stdClass();
                 $certrecord->timecreated = $certdata->citimecreated;
 
                 // Date format.
-                $dateformat = get_string('strftimedate');
+                $dateformat = get_string('strftimedate', 'langconfig');
 
                 // Required variables for output.
                 $userid = $certrecord->userid = $certdata->userid;
@@ -114,24 +111,25 @@ if (!$certificates) {
                 $grade = certificate_get_grade($certdata, $certrecord, $userid, $valueonly = true);
                 $date = $certrecord->timecreated = $certdata->citimecreated;
 
-        // Direct course link.
-        $link = html_writer::link(new moodle_url('/course/view.php', array('id' => $courseid)),
+                // Direct course link.
+                $link = html_writer::link(new moodle_url('/course/view.php', array('id' => $courseid)),
                 $coursename, array('fullname' => $coursename));
 
-        // Direct certificate download link.
-        $filelink = file_encode_url($CFG->wwwroot.'/pluginfile.php', '/'.$contextid.'/mod_certificate/issue/'
-                 .$certificateid.'/'.$filename);
+                // Direct certificate download link.
+                $filelink = file_encode_url($CFG->wwwroot.'/pluginfile.php', '/'.$contextid.'/mod_certificate/issue/'
+                .$certificateid.'/'.$filename);
 
-        $outputlink = '<a href="'.$filelink.'" >'
+                $outputlink = '<a href="'.$filelink.'" >'
                     .'<img src="../report_certificates/pix/download.png" alt="Please download"'
-                    .'width="100px" height="29px">'
+                    .'width="25px" height="25px">'
                     .'</a>';
 
-        $table->data[] = array ($link,  $grade, $code, userdate($date, $dateformat), $outputlink);
+                $table->data[] = array ($link,  $grade, $code, userdate($date, $dateformat), $outputlink);
 
-    }
-    echo $OUTPUT->heading(get_string('report_certificates_heading', 'block_report_certificates'));
-    echo '<br />';
-    echo html_writer::table($table);
-}
-echo $OUTPUT->footer();
+            }
+                echo $OUTPUT->heading(get_string('report_certificates_heading', 'block_report_certificates'));
+                echo '<br />';
+                echo html_writer::table($table);
+        }
+
+        echo $OUTPUT->footer();
